@@ -55,6 +55,21 @@ if (isset($_POST['action']) && $_POST['action'] === 'score_update') {
     exit(header("Location: board.php"));
 }
 
+/* Final Jeopardy Score Update */
+if (isset($_POST['action']) && $_POST['action'] === 'final_score_update') {
+
+    $player = (int)$_POST['player'];
+    $wager = (int)$_POST['wager'];
+    $change = $_POST['change'];
+
+    if ($change === '+') {
+        $_SESSION['scores'][$player] += $wager;
+    } else {
+        $_SESSION['scores'][$player] -= $wager;
+    }
+
+    exit(header("Location: board.php"));
+}
 
 /* Final Jeopardy Wager */
 if (isset($_POST['action']) && $_POST['action'] === 'submit_wager') {
@@ -121,8 +136,12 @@ if (isset($_SESSION['question_mode']) && $_SESSION['question_mode'] === true):
             <button name="change" value="-" class="btn btn-wrong">- Incorrect</button>
         </form>
 
-        <div class="answer-box">
-            <strong>Correct Answer:</strong> <?php echo htmlspecialchars($q['answer']); ?>
+        <div class="answer-reveal">
+            <input type="checkbox" id="reveal-answer" class="reveal-checkbox">
+            <label for="reveal-answer" class="btn btn-reveal">Show Answer</label>
+            <div class="answer-box">
+                <strong>Correct Answer:</strong> <?php echo htmlspecialchars($q['answer']); ?>
+            </div>
         </div>
     </div>
 
@@ -136,26 +155,36 @@ elseif (isset($_SESSION['final_mode'])):
         <h2>Final Jeopardy!</h2>
         <p class="final-question"><?php echo htmlspecialchars($fq['question']); ?></p>
 
-        <form method="POST" class="final-form">
-            <input type="hidden" name="action" value="submit_wager">
+        <div class="wager-section">
+            <?php foreach ($_SESSION['scores'] as $i => $score): ?>
+                <div class="player-wager-row">
+                    <div class="player-wager-info">
+                        <span class="player-label">Player <?php echo $i+1; ?></span>
+                        <span class="player-current">Current: $<?php echo $score; ?></span>
+                    </div>
+                    <div class="player-wager-controls">
+                        <form method="POST" class="wager-form">
+                            <input type="hidden" name="action" value="final_score_update">
+                            <input type="hidden" name="player" value="<?php echo $i; ?>">
+                            <input type="number" name="wager" class="wager-field" max="<?php echo max(0, $score); ?>" min="0" value="0" required>
+                            <button name="change" value="+" class="btn btn-correct btn-small">+ Correct</button>
+                            <button name="change" value="-" class="btn btn-wrong btn-small">- Incorrect</button>
+                        </form>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
 
-            <div class="wager-section">
-                <?php foreach ($_SESSION['scores'] as $i => $score): ?>
-                    <?php if ($score > 0): ?>
-                        <div class="wager-input">
-                            <label>Player <?php echo $i+1; ?> wager (Current: $<?php echo $score; ?>):</label>
-                            <input type="number" name="wager[<?php echo $i; ?>]" max="<?php echo $score; ?>" min="0" value="0" required>
-                        </div>
-                    <?php endif; ?>
-                <?php endforeach; ?>
+        <div class="answer-reveal" style="margin-top: 2rem;">
+            <input type="checkbox" id="reveal-final-answer" class="reveal-checkbox">
+            <label for="reveal-final-answer" class="btn btn-reveal">Show Answer</label>
+            <div class="answer-box">
+                <strong>Correct Answer:</strong> <?php echo htmlspecialchars($fq['answer']); ?>
             </div>
+        </div>
 
-            <div class="answer-input">
-                <label>Your answer:</label>
-                <input type="text" name="fj_answer" required>
-            </div>
-
-            <button type="submit" class="btn btn-submit">Submit Final Answer</button>
+        <form method="POST" action="process/reset.php" style="margin-top: 2rem; text-align: center;">
+            <button class="btn btn-restart">End Game</button>
         </form>
     </div>
 

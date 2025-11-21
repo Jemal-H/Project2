@@ -1,7 +1,9 @@
 <?php
 require_once "../includes/sessions.php";
 
-// Get number of players
+
+
+// Gets number of players
 $numPlayers = isset($_POST['num_players']) ? (int)$_POST['num_players'] : 2;
 
 // Validate

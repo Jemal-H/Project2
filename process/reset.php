@@ -1,13 +1,13 @@
 <?php
 session_start();
 
-// Destroy all session data
+// Deletes all session data
 session_destroy();
 
 // Start new session
 session_start();
 
-// Redirect to home page
+// Sends back to home page
 header("Location: ../index.php");
 exit;
 ?>

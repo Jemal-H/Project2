@@ -1,0 +1,164 @@
+{
+  "History": [
+    {
+      "value": 200,
+      "question": "This wall fell in 1989, reuniting East and West Germany",
+      "answer": "What is the Berlin Wall?"
+    },
+    {
+      "value": 400,
+      "question": "The first president of the United States",
+      "answer": "Who is George Washington?"
+    },
+    {
+      "value": 600,
+      "question": "This 1648 treaty ended the Thirty Years War and established the modern concept of state sovereignty",
+      "answer": "What is the Peace of Westphalia?"
+    },
+    {
+      "value": 800,
+      "question": "This Byzantine Emperor reconquered much of the former Western Roman Empire and commissioned the Corpus Juris Civilis",
+      "answer": "Who is Justinian I?"
+    },
+    {
+      "value": 1000,
+      "question": "The Defenestration of Prague in 1618, where Protestant nobles threw Catholic officials from a window, sparked this major European conflict",
+      "answer": "What is the Thirty Years War?"
+    }
+  ],
+  "Science": [
+    {
+      "value": 200,
+      "question": "This planet is known as the Red Planet",
+      "answer": "What is Mars?"
+    },
+    {
+      "value": 400,
+      "question": "The chemical symbol for water",
+      "answer": "What is H2O?"
+    },
+    {
+      "value": 600,
+      "question": "This physicist proposed that energy is quantized and won the 1918 Nobel Prize, founding quantum theory",
+      "answer": "Who is Max Planck?"
+    },
+    {
+      "value": 800,
+      "question": "This organelle contains cristae and has its own circular DNA, supporting the endosymbiotic theory",
+      "answer": "What is the mitochondrion?"
+    },
+    {
+      "value": 1000,
+      "question": "This principle states that you cannot simultaneously know both the position and momentum of a particle with arbitrary precision",
+      "answer": "What is the Heisenberg Uncertainty Principle?"
+    }
+  ],
+  "Pop Culture": [
+    {
+      "value": 200,
+      "question": "This streaming service produced Stranger Things",
+      "answer": "What is Netflix?"
+    },
+    {
+      "value": 400,
+      "question": "The King of Pop",
+      "answer": "Who is Michael Jackson?"
+    },
+    {
+      "value": 600,
+      "question": "This 1941 Orson Welles film, loosely based on William Randolph Hearst, is often cited as the greatest film ever made",
+      "answer": "What is Citizen Kane?"
+    },
+    {
+      "value": 800,
+      "question": "This author created the fictional language Dothraki for their fantasy series that was adapted by HBO",
+      "answer": "Who is George R.R. Martin?"
+    },
+    {
+      "value": 1000,
+      "question": "This Japanese director is known for Seven Samurai and heavily influenced Western filmmakers including George Lucas",
+      "answer": "Who is Akira Kurosawa?"
+    }
+  ],
+  "Grammar": [
+    {
+      "value": 200,
+      "question": "A word that describes a noun",
+      "answer": "What is an adjective?"
+    },
+    {
+      "value": 400,
+      "question": "The correct form in the sentence: 'You're going to the store'",
+      "answer": "What is You're?"
+    },
+    {
+      "value": 600,
+      "question": "This rhetorical device places two contradictory terms together, like 'deafening silence' or 'jumbo shrimp'",
+      "answer": "What is an oxymoron?"
+    },
+    {
+      "value": 800,
+      "question": "This grammatical mood expresses wishes, hypothetical situations, or conditions contrary to fact, as in 'If I were rich'",
+      "answer": "What is the subjunctive mood?"
+    },
+    {
+      "value": 1000,
+      "question": "This linguistic phenomenon occurs when a modifier is ambiguously placed, as in 'I saw the man with binoculars'",
+      "answer": "What is syntactic ambiguity?"
+    }
+  ],
+  "Geography": [
+    {
+      "value": 200,
+      "question": "The capital of France",
+      "answer": "What is Paris?"
+    },
+    {
+      "value": 400,
+      "question": "The largest ocean on Earth",
+      "answer": "What is the Pacific Ocean?"
+    },
+    {
+      "value": 600,
+      "question": "This tectonic plate boundary where plates slide past each other causes earthquakes along California's San Andreas Fault",
+      "answer": "What is a transform boundary?"
+    },
+    {
+      "value": 800,
+      "question": "This landlocked country in South America is named after Simón Bolívar and has two capital cities",
+      "answer": "What is Bolivia?"
+    },
+    {
+      "value": 1000,
+      "question": "This deepest point in Earth's oceans reaches nearly 36,000 feet below sea level in the Mariana Trench",
+      "answer": "What is Challenger Deep?"
+    }
+  ],
+  "Comp Sci": [
+    {
+      "value": 200,
+      "question": "HTML stands for this",
+      "answer": "What is HyperText Markup Language?"
+    },
+    {
+      "value": 400,
+      "question": "This programming language is known for its use in web development and has a coffee-related name",
+      "answer": "What is JavaScript?"
+    },
+    {
+      "value": 600,
+      "question": "This sorting algorithm has O(n log n) average time complexity and uses a divide-and-conquer strategy",
+      "answer": "What is merge sort?"
+    },
+    {
+      "value": 800,
+      "question": "This theorem states that a Turing machine cannot determine whether an arbitrary program will halt or run forever",
+      "answer": "What is the Halting Problem?"
+    },
+    {
+      "value": 1000,
+      "question": "This graph algorithm finds the shortest path between nodes using a priority queue and has O((V+E) log V) complexity",
+      "answer": "What is Dijkstra's algorithm?"
+    }
+  ]
+}
