@@ -1,0 +1,21 @@
+{
+  "History": [
+    {
+      "value": 200,
+      "question": "Who was the first U.S. president?",
+      "answer": "George Washington"
+    },
+    {
+      "value": 400,
+      "question": "...",
+      "answer": "..."
+    }
+  ],
+  "Science": [
+    {
+      "value": 200,
+      "question": "What planet is known as the Red Planet?",
+      "answer": "Mars"
+    }
+  ]
+}
