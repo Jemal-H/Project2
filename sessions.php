@@ -4,24 +4,23 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Ensure base session structure exists
 if (!isset($_SESSION['players'])) {
-    $_SESSION['players'] = 0; // Number of players will be set at init_game.php
+    $_SESSION['players'] = 0; // Number of players
 }
 
 if (!isset($_SESSION['scores'])) {
-    $_SESSION['scores'] = []; // Will be filled with player scores
+    $_SESSION['scores'] = []; // Filled with team's scores
 }
 
 if (!isset($_SESSION['current_player'])) {
-    $_SESSION['current_player'] = 1; // Default starting player (overwritten later)
+    $_SESSION['current_player'] = 1; // Default starting player
 }
 
 if (!isset($_SESSION['used_tiles'])) {
-    $_SESSION['used_tiles'] = []; // Stores used tiles (e.g. "History_200")
+    $_SESSION['used_tiles'] = []; // Stores used tiles
 }
 
-// Used later for final jeopardy
+// For final jeopardy
 if (!isset($_SESSION['final_wagers'])) {
     $_SESSION['final_wagers'] = [];
 }

@@ -1,12 +1,10 @@
 <?php
-require_once "includes/session.php";
+require_once "includes/sessions.php";
 require_once "includes/helpers.php";
 
 $questions = loadQuestions();
 
-/* -------------------------------
-   1. SELECT QUESTION HANDLER
---------------------------------*/
+/* Select Question */
 if (isset($_POST['action']) && $_POST['action'] === 'select_question') {
 
     $category = $_POST['category'];
@@ -26,9 +24,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'select_question') {
 }
 
 
-/* -------------------------------
-   2. UPDATE SCORE HANDLER (+ / -)
---------------------------------*/
+/* Update Scores */
 if (isset($_POST['action']) && $_POST['action'] === 'score_update') {
 
     $value = $_POST['value'];
@@ -47,8 +43,10 @@ if (isset($_POST['action']) && $_POST['action'] === 'score_update') {
     $val = $_SESSION['current_question']['value'];
     markTileUsed($cat, $val);
 
-    // Move to next player
-    nextPlayer();
+    // Move to next player (only if wrong answer)
+    if ($change === '-') {
+        nextPlayer();
+    }
 
     // Return to board mode
     unset($_SESSION['question_mode']);
@@ -58,9 +56,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'score_update') {
 }
 
 
-/* -------------------------------
-   3. FINAL JEOPARDY WAGER HANDLER
---------------------------------*/
+/* Final Jeopardy Wager */
 if (isset($_POST['action']) && $_POST['action'] === 'submit_wager') {
 
     $wagers = $_POST['wager'];
@@ -72,12 +68,14 @@ if (isset($_POST['action']) && $_POST['action'] === 'submit_wager') {
     $finalQ = $_SESSION['final_question'];
 
     foreach ($_SESSION['scores'] as $i => $score) {
-        $wager = intval($wagers[$i]);
+        if (isset($wagers[$i])) {
+            $wager = intval($wagers[$i]);
 
-        if (strcasecmp($answer, $finalQ['answer']) == 0) {
-            $_SESSION['scores'][$i] += $wager;
-        } else {
-            $_SESSION['scores'][$i] -= $wager;
+            if (strcasecmp($answer, $finalQ['answer']) == 0) {
+                $_SESSION['scores'][$i] += $wager;
+            } else {
+                $_SESSION['scores'][$i] -= $wager;
+            }
         }
     }
 
@@ -86,15 +84,12 @@ if (isset($_POST['action']) && $_POST['action'] === 'submit_wager') {
     exit(header("Location: board.php"));
 }
 
-
-/* -------------------------------
-   4. IF ALL TILES USED → FINAL MODE
---------------------------------*/
-if (allTilesUsed() && !isset($_SESSION['final_question'])) {
+/* Check for Final Jeopardy Trigger */
+if (allTilesUsed() && !isset($_SESSION['final_question']) && !isset($_SESSION['game_over'])) {
 
     $_SESSION['final_question'] = [
-        "question" => "This is your Final Jeopardy question!",
-        "answer"   => "Example Answer"
+        "question" => "This 1815 battle, fought in present-day Belgium, ended Napoleon's rule and the Napoleonic Wars",
+        "answer"   => "Battle of Waterloo"
     ];
 
     $_SESSION['final_mode'] = true;
@@ -108,89 +103,118 @@ include "includes/header.php";
 <div class="board-container">
 
 <?php
-/* -------------------------------
-   VIEW: QUESTION SCREEN
---------------------------------*/
+
+/* Questions */
 if (isset($_SESSION['question_mode']) && $_SESSION['question_mode'] === true):
 
     $q = $_SESSION['current_question'];
 ?>
-    <h2><?php echo $q['category'] . " - $" . $q['value']; ?></h2>
-    <p class="question-text"><?php echo $q['question']; ?></p>
+    <div class="question-screen">
+        <h2 class="question-header"><?php echo htmlspecialchars($q['category']) . " - $" . $q['value']; ?></h2>
+        <p class="question-text"><?php echo htmlspecialchars($q['question']); ?></p>
 
-    <form method="POST">
-        <input type="hidden" name="action" value="score_update">
-        <input type="hidden" name="value" value="<?php echo $q['value']; ?>">
+        <form method="POST" class="score-form">
+            <input type="hidden" name="action" value="score_update">
+            <input type="hidden" name="value" value="<?php echo $q['value']; ?>">
 
-        <button name="change" value="+">Correct (+)</button>
-        <button name="change" value="-">Incorrect (–)</button>
-    </form>
+            <button name="change" value="+" class="btn btn-correct">+ Correct</button>
+            <button name="change" value="-" class="btn btn-wrong">- Incorrect</button>
+        </form>
 
-    <div class="answer">
-        <strong>Correct Answer:</strong> <?php echo $q['answer']; ?>
+        <div class="answer-box">
+            <strong>Correct Answer:</strong> <?php echo htmlspecialchars($q['answer']); ?>
+        </div>
     </div>
 
 <?php
-/* -------------------------------
-   VIEW: FINAL JEOPARDY SCREEN
---------------------------------*/
+/* Final Jeopardy */
 elseif (isset($_SESSION['final_mode'])):
 
     $fq = $_SESSION['final_question'];
 ?>
-    <h2>Final Jeopardy</h2>
-    <p><?php echo $fq['question']; ?></p>
+    <div class="final-jeopardy">
+        <h2>Final Jeopardy!</h2>
+        <p class="final-question"><?php echo htmlspecialchars($fq['question']); ?></p>
 
-    <form method="POST">
-        <input type="hidden" name="action" value="submit_wager">
+        <form method="POST" class="final-form">
+            <input type="hidden" name="action" value="submit_wager">
 
-        <?php foreach ($_SESSION['scores'] as $i => $score): ?>
-            <?php if ($score > 0): ?>
-                <div>
-                    Player <?php echo $i+1; ?> wager:
-                    <input type="number" name="wager[<?php echo $i; ?>]" max="<?php echo $score; ?>" min="0" required>
-                </div>
-            <?php endif; ?>
-        <?php endforeach; ?>
+            <div class="wager-section">
+                <?php foreach ($_SESSION['scores'] as $i => $score): ?>
+                    <?php if ($score > 0): ?>
+                        <div class="wager-input">
+                            <label>Player <?php echo $i+1; ?> wager (Current: $<?php echo $score; ?>):</label>
+                            <input type="number" name="wager[<?php echo $i; ?>]" max="<?php echo $score; ?>" min="0" value="0" required>
+                        </div>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            </div>
 
-        <p>Your answer:</p>
-        <input type="text" name="fj_answer" required>
+            <div class="answer-input">
+                <label>Your answer:</label>
+                <input type="text" name="fj_answer" required>
+            </div>
 
-        <button type="submit">Submit Final Answer</button>
-    </form>
+            <button type="submit" class="btn btn-submit">Submit Final Answer</button>
+        </form>
+    </div>
 
 <?php
-/* -------------------------------
-   VIEW: GAME OVER SCREEN
---------------------------------*/
+
+/* Game Over */
 elseif (isset($_SESSION['game_over'])):
+    
+    // Sort scores to find winner
+    $players = [];
+    foreach ($_SESSION['scores'] as $i => $score) {
+        $players[] = ['id' => $i+1, 'score' => $score];
+    }
+    usort($players, function($a, $b) { return $b['score'] - $a['score']; });
 ?>
-    <h2>Game Over – Final Scores</h2>
-    <?php foreach ($_SESSION['scores'] as $i => $score): ?>
-        <p>Player <?php echo $i+1; ?>: <?php echo $score; ?></p>
-    <?php endforeach; ?>
+    <div class="game-over">
+        <h2>🏆 Game Over – Final Scores 🏆</h2>
+        
+        <div class="winner-announce">
+            <p class="winner-text">Winner: Player <?php echo $players[0]['id']; ?></p>
+            <p class="winner-score">$<?php echo $players[0]['score']; ?></p>
+        </div>
 
-    <form method="POST" action="process/reset.php">
-        <button>Restart Game</button>
-    </form>
+        <div class="final-standings">
+            <h3>Final Standings:</h3>
+            <?php foreach ($players as $idx => $player): ?>
+                <p class="standing-<?php echo $idx+1; ?>">
+                    <?php 
+                    if ($idx === 0) echo '🥇 ';
+                    elseif ($idx === 1) echo '🥈 ';
+                    elseif ($idx === 2) echo '🥉 ';
+                    ?>
+                    Player <?php echo $player['id']; ?>: $<?php echo $player['score']; ?>
+                </p>
+            <?php endforeach; ?>
+        </div>
+
+        <form method="POST" action="process/reset.php">
+            <button class="btn btn-restart">Play Again</button>
+        </form>
+    </div>
 
 <?php
-/* -------------------------------
-   VIEW: MAIN JEOPARDY BOARD
---------------------------------*/
+
+/* Main Jeopardy Board */
 else:
 ?>
 
-<h1>Jeopardy</h1>
+<h1 class="jeopardy-title">Jeopardy</h1>
 
 <div class="turn-indicator">
-    Current Turn: Player <?php echo $_SESSION['current_player']; ?>
+    Current Turn: <span class="current-player">Player <?php echo $_SESSION['current_player']; ?></span>
 </div>
 
 <div class="score-area">
     <?php foreach ($_SESSION['scores'] as $i => $score): ?>
         <div class="player-score <?php echo ($i+1 === $_SESSION['current_player']) ? 'active-player' : ''; ?>">
-            Player <?php echo $i+1; ?>: <?php echo $score; ?>
+            <div class="player-name">Player <?php echo $i+1; ?></div>
+            <div class="player-points">$<?php echo $score; ?></div>
         </div>
     <?php endforeach; ?>
 </div>
@@ -198,7 +222,7 @@ else:
 <div class="board-grid">
 
     <?php foreach ($questions as $category => $qList): ?>
-        <div class="category-header"><?php echo $category; ?></div>
+        <div class="category-header"><?php echo htmlspecialchars($category); ?></div>
     <?php endforeach; ?>
 
     <?php for ($i=0; $i<5; $i++): ?>
@@ -211,7 +235,7 @@ else:
             <?php if (!$used): ?>
                 <form method="POST">
                     <input type="hidden" name="action" value="select_question">
-                    <input type="hidden" name="category" value="<?php echo $category; ?>">
+                    <input type="hidden" name="category" value="<?php echo htmlspecialchars($category); ?>">
                     <input type="hidden" name="value" value="<?php echo $value; ?>">
                     <button class="tile-btn">$<?php echo $value; ?></button>
                 </form>
@@ -229,4 +253,3 @@ else:
 </div>
 
 <?php include "includes/footer.php"; ?>
-

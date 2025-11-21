@@ -1,8 +1,6 @@
 <?php
 
-/**
- * Load questions.json and return associative array.
- */
+/* Load questions.json */
 function loadQuestions() {
     $path = __DIR__ . '/../data/questions.json';
 
@@ -15,9 +13,7 @@ function loadQuestions() {
 }
 
 
-/**
- * Rotate to next player (1-based).
- */
+/* Rotates to next player */
 function nextPlayer() {
     $totalPlayers = $_SESSION['players'];
 
@@ -29,27 +25,21 @@ function nextPlayer() {
 }
 
 
-/**
- * Mark a tile as used (category + value).
- */
+/* Marks a tile as picked */
 function markTileUsed($category, $value) {
     $tileId = $category . "_" . $value;
     $_SESSION['used_tiles'][$tileId] = true;
 }
 
 
-/**
- * Check if a tile is already used.
- */
+/* Check if a tile has been picked. */
 function isTileUsed($category, $value) {
     $tileId = $category . "_" . $value;
     return isset($_SESSION['used_tiles'][$tileId]);
 }
 
 
-/**
- * Returns TRUE if all tiles are used.
- */
+/* Returns TRUE if all tiles are picked. */
 function allTilesUsed() {
     $questions = loadQuestions();
     $totalTiles = 0;
@@ -62,10 +52,6 @@ function allTilesUsed() {
     return $usedTiles >= $totalTiles;
 }
 
-
-/**
- * Debugging helper: print session array in readable form.
- */
 function debugSession() {
     echo "<pre>";
     print_r($_SESSION);
